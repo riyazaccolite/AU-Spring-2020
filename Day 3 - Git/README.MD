@@ -1,5 +1,5 @@
 __`git init`__				  Initialize  a repo  
-`git status`				Get the status of the project  
+__`git status`__				Get the status of the project  
 __`git add`__					Adds files to staging environment  
 __`git add -p`__				Modify Hunks  
 __`git commit	`__			Commit the changes made in branch  
