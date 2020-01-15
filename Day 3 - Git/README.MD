@@ -1,3 +1,4 @@
+## Git Commands
 __`git init`__				  Initialize  a repo  
 __`git status`__				Get the status of the project  
 __`git add`__					Adds files to staging environment  
