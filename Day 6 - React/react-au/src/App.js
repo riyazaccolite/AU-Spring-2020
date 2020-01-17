@@ -1,10 +1,12 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Datapass from './components/Datapass';
 
 function App() {
   return (
     <div className="App">
+      <Datapass/>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
