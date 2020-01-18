@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<university>
+	<department branch="cse">
+		<student>
+			<firstname>name5</firstname>
+			<lastname>lastname3</lastname>
+			<rollnumber>1</rollnumber>
+		</student>
+		<student>
+			<firstname>name4</firstname>
+			<lastname>lastname5</lastname>
+			<rollnumber>2</rollnumber>
+		</student>
+		<student>
+			<firstname>name3</firstname>
+			<lastname>lastname1</lastname>
+			<rollnumber>3</rollnumber>
+		</student>
+	</department>
+	<department branch="it">
+		<student>
+			<firstname>name2</firstname>
+			<lastname>lastname4</lastname>
+			<rollnumber>4</rollnumber>
+		</student>
+		<student>
+			<firstname>name1</firstname>
+			<lastname>lastname2</lastname>
+			<rollnumber>5</rollnumber>
+		</student>
+		<student>
+			<firstname>name6</firstname>
+			<lastname>lastname6</lastname>
+			<rollnumber>6</rollnumber>
+		</student>
+	</department>
+	<department branch="ece">
+		<student>
+			<firstname>name7</firstname>
+			<lastname>lastname7</lastname>
+			<rollnumber>7</rollnumber>
+		</student>
+		<student>
+			<firstname>name8</firstname>
+			<lastname>lastname8</lastname>
+			<rollnumber>8</rollnumber>
+		</student>
+		<student>
+			<firstname>name9</firstname>
+			<lastname>lastname9</lastname>
+			<rollnumber>9</rollnumber>
+		</student>
+	</department>
+</university>
