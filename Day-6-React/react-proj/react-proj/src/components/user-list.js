@@ -28,7 +28,7 @@ const UserList = ({users, sortUsersBy}) => {
             <TableCell align="center"><Button onClick = {() => sortUsersBy('name')}> Name </Button></TableCell>
             <TableCell align="center"><Button onClick = {() => sortUsersBy('email')}> Email </Button></TableCell>
             <TableCell align="center"><Button onClick = {() => sortUsersBy('phone')}> Phone </Button></TableCell>
-            <TableCell></TableCell>
+            {/* <TableCell></TableCell> */}
             <TableCell></TableCell>
           </TableRow>
         </TableHead>

@@ -10,14 +10,14 @@ const User = ({user}) => {
     const [nameEditable, changeNameEditable] = React.useState(false);
     const [emailEditable, changeEmailEditable] = React.useState(false);
     const [phoneEditable, changePhoneEditable] = React.useState(false);
-    const [updateBtnDisabled, toggleUpdateButton] = React.useState(true);
+    //const [updateBtnDisabled, toggleUpdateButton] = React.useState(true);
     
-    const handleUpdate = () => {
-        changeNameEditable(false);
-        changeEmailEditable(false);
-        changePhoneEditable(false);
-        toggleUpdateButton(true);
-    }
+    // const handleUpdate = () => {
+    //     changeNameEditable(false);
+    //     changeEmailEditable(false);
+    //     changePhoneEditable(false);
+    //     toggleUpdateButton(true);
+    // }
 
     return (
         <Fragment>
@@ -25,30 +25,36 @@ const User = ({user}) => {
             <TableCell align="center">
                 {
                     nameEditable?
-                        <TextField id="standard-basic" label="name" value={name} onChange = {(e) => updateName(e.currentTarget.value)}></TextField>
+                        <TextField id="standard-basic" label="name" autoFocus value={name} 
+                            onChange = {(e) => updateName(e.currentTarget.value)} 
+                            onBlur = {() => changeNameEditable(false) } ></TextField>
                             :
-                        <Button onClick={() => {changeNameEditable(true); toggleUpdateButton(false);}}>{name}</Button>
+                        <Button onClick={() => changeNameEditable(true)}>{name}</Button>
                 }
             </TableCell>
             
             <TableCell align="center">
                 {
                     emailEditable?
-                        <TextField id="standard-basic" label="email" value={email} onChange = {(e) => updateEmail(e.currentTarget.value)}></TextField>
+                        <TextField id="standard-basic" label="email" autoFocus value={email}
+                         onChange = {(e) => updateEmail(e.currentTarget.value)}
+                         onBlur = {() => changeEmailEditable(false)}></TextField>
                             :
-                        <Button onClick={() => {changeEmailEditable(true); toggleUpdateButton(false);}}>{email}</Button>
+                        <Button onClick={() => changeEmailEditable(true)}>{email}</Button>
                 }
             </TableCell>
 
             <TableCell align="center">
                 {
                     phoneEditable?
-                        <TextField id="standard-basic" label="phone" value={phone} onChange = {(e) => updatePhone(e.currentTarget.value)}></TextField>
+                        <TextField id="standard-basic" label="phone" autoFocus value={phone} 
+                            onChange = {(e) => updatePhone(e.currentTarget.value)}
+                            onBlur = {() => changePhoneEditable(false)}></TextField>
                             :
-                        <Button onClick={() => {changePhoneEditable(true); toggleUpdateButton(false);}}>{phone}</Button>
+                        <Button onClick={() => changePhoneEditable(true)}>{phone}</Button>
                 }
             </TableCell>
-            <TableCell><Button variant="contained" color="secondary" onClick={ handleUpdate } disabled = {updateBtnDisabled}>Update</Button></TableCell>
+            {/* <TableCell><Button variant="contained" color="secondary" onClick={ handleUpdate } disabled = {updateBtnDisabled}>Update</Button></TableCell> */}
             <UserDataContext.Consumer>
                 { context => 
                     <TableCell>
