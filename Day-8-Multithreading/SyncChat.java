@@ -2,28 +2,28 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-public class GroupChat {
+public class SyncChat {
 	InetAddress group;
 	final int port;
 	MulticastSocket ms;
 	
 	boolean stopSending = false;
 	
-	GroupChat(int port) {
+	SyncChat(int port) {
 		this.port = 8088;
 	}
 	
 	public static void main(String args[]) throws Exception{
 		
-		GroupChat groupChat = new GroupChat(8088);
+		SyncChat syncChat = new SyncChat(8088);
 		
-		groupChat.group = InetAddress.getByName("228.5.4.103");
-		groupChat.ms = new MulticastSocket(groupChat.port);
-		groupChat.ms.joinGroup(groupChat.group);
+		syncChat.group = InetAddress.getByName("228.5.4.103");
+		syncChat.ms = new MulticastSocket(syncChat.port);
+		syncChat.ms.joinGroup(syncChat.group);
 		System.out.println("Connected");
 		
-		new Thread(new Sender(groupChat)).start();
-		new Thread(new Receiver(groupChat)).start();
+		new Thread(new Sender(syncChat)).start();
+		new Thread(new Receiver(syncChat)).start();
 	}
 	
 	synchronized void toggleSending(boolean flag) {
@@ -43,13 +43,13 @@ class Sender implements Runnable{
 	InetAddress group;
 	int port;
 	static DatagramPacket sentPacket;
-	GroupChat groupChat;
+	SyncChat syncChat;
 	
-	Sender(GroupChat groupChat){
-		this.groupChat = groupChat;
-		this.ms = groupChat.ms;
-		this.group = groupChat.group;
-		this.port = groupChat.port;
+	Sender(SyncChat syncChat){
+		this.syncChat = syncChat;
+		this.ms = syncChat.ms;
+		this.group = syncChat.group;
+		this.port = syncChat.port;
 	}
 	
 	synchronized static void setSentPacket(DatagramPacket sentPacket) {
@@ -60,10 +60,10 @@ class Sender implements Runnable{
 	public void run(){
 		Scanner sc = new Scanner(System.in);
 		while(true){
-			synchronized(this.groupChat) {
+			synchronized(this.syncChat) {
 				try{
-					while(this.groupChat.shouldStopSending()) {
-						this.groupChat.wait();
+					while(this.syncChat.shouldStopSending()) {
+						this.syncChat.wait();
 					}
 					System.out.println("Enter your message");
 					String message = sc.next();
@@ -71,7 +71,7 @@ class Sender implements Runnable{
 					ms.send(packet);
 					setSentPacket(packet);
 					System.out.println("Sent "+message);
-					this.groupChat.toggleSending(true);
+					this.syncChat.toggleSending(true);
 					System.out.println("--Waiting for response--");
 				}
 				catch(Exception e){
@@ -88,13 +88,13 @@ class Receiver implements Runnable{
 	int port;
 	
 	
-	GroupChat groupChat;
+	SyncChat syncChat;
 	
-	Receiver(GroupChat groupChat){
-		this.groupChat = groupChat;
-		this.ms = groupChat.ms;
-		this.group = groupChat.group;
-		this.port = groupChat.port;
+	Receiver(SyncChat syncChat){
+		this.syncChat = syncChat;
+		this.ms = syncChat.ms;
+		this.group = syncChat.group;
+		this.port = syncChat.port;
 	}
 	
 	public void run(){
@@ -108,7 +108,7 @@ class Receiver implements Runnable{
 					if(!(Sender.sentPacket!=null && message.equals((new String(Sender.sentPacket.getData())).trim()))) {
 						System.out.println("Received: "+ message);
 						Sender.setSentPacket(null);
-						this.groupChat.toggleSending(false);
+						this.syncChat.toggleSending(false);
 					}
 					else {
 						Sender.setSentPacket(null);
