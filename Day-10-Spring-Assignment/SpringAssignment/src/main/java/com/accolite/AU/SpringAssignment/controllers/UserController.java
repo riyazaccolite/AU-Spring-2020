@@ -9,8 +9,8 @@ import com.accolite.AU.SpringAssignment.models.Users;
 @RestController
 public class UserController {
 	private final UserService userService;
-	
-	UserController(UserService userService) {
+
+	public UserController(UserService userService) {
 		this.userService = userService;
 	}
 	

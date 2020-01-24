@@ -1,12 +1,12 @@
 package com.accolite.AU.SpringAssignment.Services;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 
+import com.accolite.AU.SpringAssignment.controllers.UserController;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 
 import com.accolite.AU.SpringAssignment.models.User;
 import com.accolite.AU.SpringAssignment.models.Users;
@@ -15,20 +15,27 @@ import com.accolite.AU.SpringAssignment.models.Users;
 public class UserService {
 	
 	Users users;
-	
+	private static Logger logger = Logger.getLogger(UserController.class.getName());
+
 	public User getUser(int id) {
+		logger.info("<CUSTOM LOG> Returning single user");
 		return users.getUsers().stream().filter(user -> user.getId() == id).findFirst().get();
 	}
 	
 	public Users getAll() {
+
+		logger.info("<CUSTOM LOG> Returning all users");
 		return users;
 	}
 	
 	public void addUser(User user) {
+
+		logger.info("<CUSTOM LOG> Adding user");
 		users.getUsers().add(user);
 	}
 	
 	public void deleteUser(User user) {
+		logger.info("<CUSTOM LOG> Deleting user");
 		users.getUsers().remove(user);
 	}
 	
