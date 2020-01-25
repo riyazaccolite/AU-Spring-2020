@@ -35,6 +35,11 @@ public class SyncChat {
 		return this.stopSending;
 	}
 	
+	synchronized void checkpoint() throws InterruptedException {
+		while(this.shouldStopSending())
+			wait();
+	}
+	
 }
 
 
@@ -60,24 +65,22 @@ class Sender implements Runnable{
 	public void run(){
 		Scanner sc = new Scanner(System.in);
 		while(true){
-			synchronized(this.syncChat) {
-				try{
-					while(this.syncChat.shouldStopSending()) {
-						this.syncChat.wait();
-					}
-					System.out.println("Enter your message");
-					String message = sc.next();
-					DatagramPacket packet = new DatagramPacket(message.getBytes(),message.length(),group,8088);
-					ms.send(packet);
-					setSentPacket(packet);
-					System.out.println("Sent "+message);
-					this.syncChat.toggleSending(true);
-					System.out.println("--Waiting for response--");
-				}
-				catch(Exception e){
-					e.printStackTrace();
-				}
+			try{
+				this.syncChat.checkpoint();
+				System.out.println("Enter your message");
+				String message = sc.next();
+				DatagramPacket packet = new DatagramPacket(message.getBytes(),message.length(),group,8088);
+				ms.send(packet);
+				setSentPacket(packet);
+				System.out.println("Sent "+message);
+				
+				this.syncChat.toggleSending(true);
+				System.out.println("--Waiting for response--");
 			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+			
 		}
 	}
 }
