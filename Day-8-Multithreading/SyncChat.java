@@ -1,45 +1,63 @@
 import java.net.*;
-import java.io.*;
 import java.util.*;
 
 public class SyncChat {
-	InetAddress group;
-	final int port;
-	MulticastSocket ms;
-	
-	boolean stopSending = false;
 	
 	SyncChat(int port) {
 		this.port = 8088;
+	}
+	
+	private InetAddress group;
+	private final int port;
+	private MulticastSocket ms;
+	private boolean stopSendingFlag = false;
+	
+	public InetAddress getGroup() {
+		return group;
+	}
+
+	public void setGroup(InetAddress group) {
+		this.group = group;
+	}
+	
+	public int getPort() {
+		return port;
+	}
+	
+	public MulticastSocket getMs() {
+		return ms;
+	}
+
+	public void setMs(MulticastSocket ms) {
+		this.ms = ms;
+	}
+	
+	synchronized void setStopSendingFlag(boolean flag) {
+		this.stopSendingFlag = flag;
+		notifyAll();
+	}
+
+	boolean getStopSendingFlag() {
+		return this.stopSendingFlag;
+	}
+	
+	synchronized void checkpoint() throws InterruptedException {
+		while(this.getStopSendingFlag())
+			wait();
 	}
 	
 	public static void main(String args[]) throws Exception{
 		
 		SyncChat syncChat = new SyncChat(8088);
 		
-		syncChat.group = InetAddress.getByName("228.5.4.103");
-		syncChat.ms = new MulticastSocket(syncChat.port);
-		syncChat.ms.joinGroup(syncChat.group);
+		syncChat.setGroup(InetAddress.getByName("228.5.4.103"));
+		syncChat.setMs( new MulticastSocket(syncChat.port));
+		syncChat.getMs().joinGroup(syncChat.group);
 		System.out.println("Connected");
 		
 		new Thread(new Sender(syncChat)).start();
 		new Thread(new Receiver(syncChat)).start();
 	}
-	
-	synchronized void toggleSending(boolean flag) {
-		this.stopSending = flag;
-		notifyAll();
-	}
-	
-	boolean shouldStopSending() {
-		return this.stopSending;
-	}
-	
-	synchronized void checkpoint() throws InterruptedException {
-		while(this.shouldStopSending())
-			wait();
-	}
-	
 }
 
 
@@ -52,9 +70,9 @@ class Sender implements Runnable{
 	
 	Sender(SyncChat syncChat){
 		this.syncChat = syncChat;
-		this.ms = syncChat.ms;
-		this.group = syncChat.group;
-		this.port = syncChat.port;
+		this.ms = syncChat.getMs();
+		this.group = syncChat.getGroup();
+		this.port = syncChat.getPort();
 	}
 	
 	synchronized static void setSentPacket(DatagramPacket sentPacket) {
@@ -70,17 +88,17 @@ class Sender implements Runnable{
 				System.out.println("Enter your message");
 				String message = sc.next();
 				DatagramPacket packet = new DatagramPacket(message.getBytes(),message.length(),group,8088);
-				ms.send(packet);
+				this.ms.send(packet);
 				setSentPacket(packet);
 				System.out.println("Sent "+message);
 				
-				this.syncChat.toggleSending(true);
+				this.syncChat.setStopSendingFlag(true);
 				System.out.println("--Waiting for response--");
 			}
 			catch(Exception e){
 				e.printStackTrace();
+				sc.close();
 			}
-			
 		}
 	}
 }
@@ -90,39 +108,36 @@ class Receiver implements Runnable{
 	InetAddress group;
 	int port;
 	
-	
 	SyncChat syncChat;
 	
 	Receiver(SyncChat syncChat){
 		this.syncChat = syncChat;
-		this.ms = syncChat.ms;
-		this.group = syncChat.group;
-		this.port = syncChat.port;
+		this.ms = syncChat.getMs();
+		this.group = syncChat.getGroup();
+		this.port = syncChat.getPort();
 	}
 	
 	public void run(){
 		while(true){
-				try{
-					byte[] data = new byte[1024];
-					DatagramPacket packet = new DatagramPacket(data,1024);
-					
-					ms.receive(packet);
-					String message = new String(packet.getData()).trim();
-					if(!(Sender.sentPacket!=null && message.equals((new String(Sender.sentPacket.getData())).trim()))) {
-						System.out.println("Received: "+ message);
-						Sender.setSentPacket(null);
-						this.syncChat.toggleSending(false);
-					}
-					else {
-						Sender.setSentPacket(null);
-					}
-					
+			try{
+				byte[] data = new byte[1024];
+				DatagramPacket packet = new DatagramPacket(data,1024);
+				
+				this.ms.receive(packet);
+				String message = new String(packet.getData()).trim();
+				if(!(Sender.sentPacket!=null && message.equals((new String(Sender.sentPacket.getData())).trim()))) {
+					System.out.println("Received: "+ message);
+					Sender.setSentPacket(null);
+					this.syncChat.setStopSendingFlag(false);
 				}
-				catch(Exception e){
-					e.printStackTrace();
+				else {
+					Sender.setSentPacket(null);
 				}
 				
-			
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 }
