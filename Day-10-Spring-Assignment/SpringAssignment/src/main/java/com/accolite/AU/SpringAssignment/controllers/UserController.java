@@ -27,7 +27,6 @@ public class UserController {
 	
 	@PostMapping(path = "add", consumes = "application/xml")
 	public User addUser(@RequestBody User user) {
-		System.out.println(user.getName());
 		userService.addUser(user);
 		return user;
 	}

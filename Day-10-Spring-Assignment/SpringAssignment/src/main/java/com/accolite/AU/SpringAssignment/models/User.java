@@ -36,9 +36,19 @@ public class User {
 	
 	@Override
 	public boolean equals(Object user) {
+
+		if (user == null)
+			return false;
+		if (this.getClass() != user.getClass())
+			return false;
 		User temp = (User)user;
 		if(temp.getId() == this.getId())
 			return true;
 		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 }
