@@ -1,6 +1,6 @@
-package com.accolite.AU.SpringAssignment;
+package com.accolite.AU.SpringAssignment.services;
 
-import com.accolite.AU.SpringAssignment.Services.UserService;
+import com.accolite.AU.SpringAssignment.services.UserService;
 import com.accolite.AU.SpringAssignment.controllers.UserController;
 import com.accolite.AU.SpringAssignment.models.User;
 import com.accolite.AU.SpringAssignment.models.Users;
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-class SpringAssignmentApplicationTests {
+class UserServiceTest {
 
 	@InjectMocks
 	UserController userController;
@@ -31,7 +31,7 @@ class SpringAssignmentApplicationTests {
 	}
 
 	@Test
-	void getOneUser() {
+	void getOneUserTest() {
 		User temp = new User();
 		temp.setName("name1");
 		temp.setId(1);
@@ -47,7 +47,7 @@ class SpringAssignmentApplicationTests {
 	}
 
 	@Test
-	void getAllUsers() {
+	void getAllUsersTest() {
 		Users temp = new Users();
 
 		when(service.getAll()).thenReturn(temp);
@@ -59,7 +59,7 @@ class SpringAssignmentApplicationTests {
 	}
 
 	@Test
-	void addUser() {
+	void addUserTest() {
 		User temp = new User();
 		temp.setName("name11");
 		temp.setId(11);
@@ -75,7 +75,7 @@ class SpringAssignmentApplicationTests {
 	}
 
 	@Test
-	void deleteUser() {
+	void deleteUserTest() {
 		User temp = new User();
 		temp.setName("name11");
 		temp.setId(11);

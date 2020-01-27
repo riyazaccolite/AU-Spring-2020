@@ -1,4 +1,4 @@
-package com.accolite.AU.SpringAssignment.Services;
+package com.accolite.AU.SpringAssignment.services;
 
 import java.util.ArrayList;
 import java.util.Optional;

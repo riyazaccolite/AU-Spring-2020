@@ -2,7 +2,7 @@ package com.accolite.AU.SpringAssignment.controllers;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.accolite.AU.SpringAssignment.Services.UserService;
+import com.accolite.AU.SpringAssignment.services.UserService;
 import com.accolite.AU.SpringAssignment.models.User;
 import com.accolite.AU.SpringAssignment.models.Users;
 
