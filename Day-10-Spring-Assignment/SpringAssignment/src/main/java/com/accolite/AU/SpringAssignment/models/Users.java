@@ -1,5 +1,6 @@
 package com.accolite.AU.SpringAssignment.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,6 +14,10 @@ public class Users
 {
     @XmlElement(name = "user")
     private List<User> users = null;
+
+    public Users() {
+        this.users = new ArrayList<>();
+    }
  
     public List<User> getUsers() {
         return users;
